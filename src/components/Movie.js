@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const Movie = (props) => {
   const { addToFavorites } = props;
-
+  const { deleteMovie } = props;
   const [movie, setMovie] = useState('');
 
   const { id } = useParams();
@@ -20,6 +20,19 @@ const Movie = (props) => {
         console.log(err.response);
       })
   }, [id]);
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+    axios.delete(`http://localhost:9000/api/movies/${id}`)
+      .then(res => {
+        deleteMovie(id);
+        navigate(`/movies`);
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
 
   return (<div className="modal-page col">
     <div className="modal-dialog">
@@ -52,7 +65,7 @@ const Movie = (props) => {
             <section>
               <span className="m-2 btn btn-dark">Favorite</span>
               <Link to={`/movies/edit/${movie.id}`} className="m-2 btn btn-success">Edit</Link>
-              <span className="delete"><input type="button" className="m-2 btn btn-danger" value="Delete" /></span>
+              <span className="delete"><input onClick={(e) => handleDelete(e)} type="button" className="m-2 btn btn-danger" value="Delete" /></span>
             </section>
           </div>
         </div>
